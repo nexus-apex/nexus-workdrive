@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}New{% endif %} Folder | NexusWorkDrive{% endblock %}
+{% block page_title %}{% if editing %}Edit Folder{% else %}New Folder{% endif %}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:750px">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ record.name|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Parent Path</label>
+        <input type="text" name="parent_path" value="{{ record.parent_path|default:'' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Owner</label>
+        <input type="text" name="owner" value="{{ record.owner|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Files Count</label>
+        <input type="number" name="files_count" value="{{ record.files_count|default:'0' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Size Mb</label>
+        <input type="number" step="0.01" name="size_mb" value="{{ record.size_mb|default:'0' }}">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="checkbox-wrapper">
+        <input type="checkbox" name="shared" id="id_shared" {% if record.shared %}checked{% endif %}>
+        <label for="id_shared" style="margin-bottom:0">Shared</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Created Date</label>
+        <input type="date" name="created_date" value="{{ record.created_date|date:'Y-m-d'|default:'' }}">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1rem">
+      <button type="submit" class="btn btn-primary">{% if editing %}Update{% else %}Create{% endif %} Folder</button>
+      <a href="/folders/" class="btn" style="background:var(--border);color:var(--text)">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
