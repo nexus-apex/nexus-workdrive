@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Storedfiles | NexusWorkDrive{% endblock %}
+{% block page_title %}Storedfiles{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+  <form class="search-bar" method="get" style="flex:1;margin-bottom:0">
+    <input type="text" name="search" value="{{ search }}" placeholder="Search storedfiles...">
+    <select name="status" onchange="this.form.submit()">
+      <option value="">All File Type</option>
+      <option value="document" {% if status_filter == 'document' %}selected{% endif %}>Document</option>
+      <option value="image" {% if status_filter == 'image' %}selected{% endif %}>Image</option>
+      <option value="video" {% if status_filter == 'video' %}selected{% endif %}>Video</option>
+      <option value="audio" {% if status_filter == 'audio' %}selected{% endif %}>Audio</option>
+      <option value="archive" {% if status_filter == 'archive' %}selected{% endif %}>Archive</option>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm">Search</button>
+  </form>
+  <a href="/storedfiles/create/" class="btn btn-primary">+ New StoredFile</a>
+</div>
+
+<div class="card">
+  {% if records %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Folder Path</th><th>File Type</th><th>Size Mb</th><th>Uploaded By</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td><a href="/storedfiles/{{ r.pk }}/edit/"><strong>{{ r.name }}</strong></a></td>
+        <td>{{ r.folder_path|default:"-" }}</td>
+        <td><span class="badge badge-blue">{{ r.get_file_type_display }}</span></td>
+        <td>{{ r.size_mb|floatformat:2 }}</td>
+        <td>{{ r.uploaded_by|default:"-" }}</td>
+        <td class="actions">
+          <a href="/storedfiles/{{ r.pk }}/edit/" class="btn btn-primary btn-sm">Edit</a>
+          <form method="post" action="/storedfiles/{{ r.pk }}/delete/" style="display:inline" onsubmit="return confirm('Delete?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Del</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No storedfiles found.</p>
+    <a href="/storedfiles/create/" class="btn btn-primary" style="margin-top:1rem">Create StoredFile</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
