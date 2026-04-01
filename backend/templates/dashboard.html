@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | NexusWorkDrive{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Total Folders</div>
+    <div class="stat-value">{{ folder_count }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Storedfiles</div>
+    <div class="stat-value" style="background:linear-gradient(135deg,#10b981,#06b6d4);-webkit-background-clip:text;background-clip:text">{{ storedfile_count }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Sharelinks</div>
+    <div class="stat-value" style="background:linear-gradient(135deg,#f59e0b,#f97316);-webkit-background-clip:text;background-clip:text">{{ sharelink_count }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Size Mb</div>
+    <div class="stat-value" style="background:linear-gradient(135deg,#ef4444,#ec4899);-webkit-background-clip:text;background-clip:text">{{ folder_total_size_mb|floatformat:0 }}</div>
+  </div>
+</div>
+
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+    <h3>Recent Folders</h3>
+    <a href="/folders/create/" class="btn btn-primary btn-sm">+ New Folder</a>
+  </div>
+  {% if recent %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Parent Path</th><th>Owner</th><th>Files Count</th><th>Size Mb</th><th>Created</th></tr>
+    </thead>
+    <tbody>
+      {% for r in recent %}
+      <tr>
+        <td><a href="/folders/{{ r.pk }}/edit/">{{ r.name }}</a></td>
+        <td>{{ r.parent_path|default:"-" }}</td><td>{{ r.owner|default:"-" }}</td><td>{{ r.files_count|default:"-" }}</td><td>{{ r.size_mb|floatformat:2 }}</td><td style="color:var(--muted)">{{ r.created_at|date:"M d, Y" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No records yet.</p>
+    <a href="/folders/create/" class="btn btn-primary" style="margin-top:1rem">Create First Folder</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
