@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}New{% endif %} StoredFile | NexusWorkDrive{% endblock %}
+{% block page_title %}{% if editing %}Edit StoredFile{% else %}New StoredFile{% endif %}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:750px">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ record.name|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Folder Path</label>
+        <input type="text" name="folder_path" value="{{ record.folder_path|default:'' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>File Type</label>
+        <select name="file_type">
+          <option value="document" {% if record.file_type == 'document' %}selected{% endif %}>Document</option>
+          <option value="image" {% if record.file_type == 'image' %}selected{% endif %}>Image</option>
+          <option value="video" {% if record.file_type == 'video' %}selected{% endif %}>Video</option>
+          <option value="audio" {% if record.file_type == 'audio' %}selected{% endif %}>Audio</option>
+          <option value="archive" {% if record.file_type == 'archive' %}selected{% endif %}>Archive</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Size Mb</label>
+        <input type="number" step="0.01" name="size_mb" value="{{ record.size_mb|default:'0' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Uploaded By</label>
+        <input type="text" name="uploaded_by" value="{{ record.uploaded_by|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Uploaded Date</label>
+        <input type="date" name="uploaded_date" value="{{ record.uploaded_date|date:'Y-m-d'|default:'' }}">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="checkbox-wrapper">
+        <input type="checkbox" name="shared" id="id_shared" {% if record.shared %}checked{% endif %}>
+        <label for="id_shared" style="margin-bottom:0">Shared</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Download Url</label>
+        <input type="url" name="download_url" value="{{ record.download_url|default:'' }}">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1rem">
+      <button type="submit" class="btn btn-primary">{% if editing %}Update{% else %}Create{% endif %} StoredFile</button>
+      <a href="/storedfiles/" class="btn" style="background:var(--border);color:var(--text)">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
